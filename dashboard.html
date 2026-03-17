@@ -288,7 +288,17 @@
     <script>
         const SUPABASE_URL = 'https://zinrqzsxvpqfoogohrwg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppbnJxenN4dnBxZm9vZ29ocndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMDk1MDIsImV4cCI6MjA3NTg4NTUwMn0.0VDP-0ys8Y_VUhLXNCJCcSV1xAXV4c6pBvUq4mjPsRU';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let supabase;
+        try {
+            if (typeof window.supabase === 'undefined') {
+                console.error("SDK do Supabase não carregou!");
+            } else {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error("Erro ao inicializar Supabase:", e);
+        }
 
         async function checkAuth() {
             console.log("Iniciando checkAuth...");
@@ -380,7 +390,22 @@
             window.location.href = `/api/admin/export?token=${session.access_token}`;
         });
 
-        checkAuth();
+        if (supabase) {
+            checkAuth();
+        } else {
+            alert("Erro crítico: SDK do banco de dados não carregou. Verifique sua conexão.");
+            document.body.classList.add('auth-checked');
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // Timeout de segurança para a página não ficar preta para sempre
+        setTimeout(() => {
+            if (!document.body.classList.contains('auth-checked')) {
+                console.warn("Auth check demorou demais. Forçando visibilidade.");
+                document.body.classList.add('auth-checked');
+                document.getElementById('loader').style.display = 'none';
+            }
+        }, 5000);
     </script>
 </body>
 </html>
