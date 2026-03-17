@@ -7,15 +7,24 @@ export default async function handler(req, res) {
   const token = authHeader.split(' ')[1];
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  
+  // Use service key if available, otherwise anon key
+  const keyToUse = supabaseServiceKey || supabaseAnonKey;
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    return res.status(500).json({ error: 'Server config error' });
+  if (!supabaseUrl || !keyToUse) {
+    return res.status(500).json({ error: 'Server config error: missing keys' });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  // Create client with CSK schema for admin operations
+  const supabase = createClient(supabaseUrl, keyToUse, {
+    db: { schema: 'CSK' }
+  });
 
   // 1. Verificar o token e obter o usuário
-  const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+  // Use a separate anon-schema client for auth (auth is schema-agnostic)
+  const authClient = createClient(supabaseUrl, keyToUse);
+  const { data: { user }, error: authError } = await authClient.auth.getUser(token);
   if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
 
   // 2. Verificar se o e-mail está na tabela CSK.usuarios
@@ -26,7 +35,8 @@ export default async function handler(req, res) {
     .single();
 
   if (adminError || !adminUser) {
-    return res.status(403).json({ error: 'Not authorized as admin' });
+    console.error('Admin lookup failed:', adminError, 'for email:', user.email);
+    return res.status(403).json({ error: 'Not authorized as admin', detail: adminError?.message });
   }
 
   // 3. Se for admin, buscar os leads
