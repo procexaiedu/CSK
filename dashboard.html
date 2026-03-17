@@ -291,15 +291,33 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
+            console.log("Iniciando checkAuth...");
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    console.error("Erro ao buscar sessão:", error);
+                    throw error;
+                }
+
+                console.log("Sessão encontrada:", !!session);
+
+                if (!session) {
+                    console.warn("Sem sessão ativa. Redirecionando para login...");
+                    window.location.href = '/login';
+                    return;
+                }
+
+                console.log("Usuário logado:", session.user.email);
+                document.body.classList.add('auth-checked');
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('user-email').innerText = session.user.email;
+                loadLeads();
+            } catch (err) {
+                console.error("Falha crítica no checkAuth:", err);
+                // Forçar redirecionamento se falhar
                 window.location.href = '/login';
-                return;
             }
-            document.body.classList.add('auth-checked');
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('user-email').innerText = session.user.email;
-            loadLeads();
         }
 
         async function loadLeads() {

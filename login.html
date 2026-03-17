@@ -156,6 +156,7 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log("Tentativa de login iniciada...");
             errorMsg.style.display = 'none';
             submitBtn.disabled = true;
             submitBtn.innerText = 'Autenticando...';
@@ -169,11 +170,13 @@
             });
 
             if (error) {
+                console.error("Erro no login:", error.message);
                 errorMsg.innerText = "Erro: " + error.message;
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.innerText = 'Entrar';
             } else {
+                console.log("Login bem-sucedido! Redirecionando...");
                 // Sessão criada com sucesso
                 window.location.href = '/dashboard';
             }
