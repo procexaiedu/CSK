@@ -574,8 +574,6 @@
     }
   </style>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -730,32 +728,8 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       console.log("=== DOM LOADED ===");
-      // ==========================================
-      // CONFIGURAÇÃO DO SUPABASE
-      // ==========================================
-      const SUPABASE_URL = 'https://zinrqzsxvpqfoogohrwg.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppbnJxenN4dnBxZm9vZ29ocndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMDk1MDIsImV4cCI6MjA3NTg4NTUwMn0.0VDP-0ys8Y_VUhLXNCJCcSV1xAXV4c6pBvUq4mjPsRU';
-      const TABLE_NAME = 'formularios'; // Tabela 'formularios'
-      const SCHEMA_NAME = 'CSK'; // Schema 'CSK'
 
       const GROUP_LINK = 'https://chat.whatsapp.com/CZ60jhbV9XFEXmTZnHx72T?mode=gi_t';
-
-      let supabase;
-      try {
-        console.log("Inicializando Supabase Client...");
-        if (typeof window.supabase === 'undefined') {
-          console.error("ERRO CRITICO: window.supabase não existe! O script do Supabase não foi carregado corretamente.");
-        } else {
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            db: {
-              schema: SCHEMA_NAME
-            }
-          });
-          console.log("Supabase Client inicializado para o schema:", SCHEMA_NAME);
-        }
-      } catch (err) {
-        console.error("Erro ao inicializar Supabase: ", err);
-      }
 
       console.log("Buscando elementos do DOM...");
       const form = document.getElementById('lead-form');
@@ -810,24 +784,22 @@
           };
           console.log("Dados do lead: ", data);
 
-          console.log("Iniciando requisição ao Supabase...");
-          if (supabase) {
-            // Envia para o Supabase no schema correto, configurado no createClient
-            const { error } = await supabase
-              .from(TABLE_NAME)
-              .insert([data]);
+          console.log("Enviando requisição para a API Vercel (/api/submit)...");
+          const response = await fetch('/api/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+          
+          const result = await response.json();
 
-            if (error) {
-              console.error("Erro retornado pelo Supabase: ", error);
-              throw error;
-            }
-            console.log("Inserção no Supabase bem-sucedida!");
-          } else {
-            console.warn("Supabase client não está inicializado.");
-            // Simulação caso não haja credenciais (modo de teste)
-            console.log('Modo Teste (Sem Credenciais): Dados que seriam salvos:', data);
-            await new Promise(r => setTimeout(r, 1200));
+          if (!response.ok || result.error) {
+            console.error("Erro retornado pela API: ", result.error);
+            throw new Error(result.error || 'Erro no servidor');
           }
+          console.log("Inserção bem-sucedida!");
 
           // Sucesso
           formContent.style.display = 'none';

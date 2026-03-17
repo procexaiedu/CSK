@@ -1,0 +1,12 @@
+{
+  "name": "csk-palestra",
+  "version": "1.0.0",
+  "description": "Application form for CSK Masterclass",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.8"
+  }
+}
