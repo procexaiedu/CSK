@@ -148,7 +148,8 @@
     <script>
         const SUPABASE_URL = 'https://zinrqzsxvpqfoogohrwg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppbnJxenN4dnBxZm9vZ29ocndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMDk1MDIsImV4cCI6MjA3NTg4NTUwMn0.0VDP-0ys8Y_VUhLXNCJCcSV1xAXV4c6pBvUq4mjPsRU';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Usando sbClient para evitar conflito com window.supabase global do CDN
+        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const form = document.getElementById('login-form');
         const errorMsg = document.getElementById('error-msg');
@@ -164,7 +165,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { data, error } = await sbClient.auth.signInWithPassword({
                 email,
                 password
             });
@@ -177,13 +178,12 @@
                 submitBtn.innerText = 'Entrar';
             } else {
                 console.log("Login bem-sucedido! Redirecionando...");
-                // Sessão criada com sucesso
                 window.location.href = '/dashboard';
             }
         });
 
         // Verificar se já está logado
-        supabase.auth.getSession().then(({ data }) => {
+        sbClient.auth.getSession().then(({ data }) => {
             if (data.session) {
                 window.location.href = '/dashboard';
             }
