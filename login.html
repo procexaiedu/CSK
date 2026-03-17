@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo | CSK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #111009;
+            --bg-card: #1A1712;
+            --bronze: #B8865A;
+            --bronze-lt: #D4A87C;
+            --cream: #F0EAE0;
+            --white: #FFFFFF;
+            --font-s: 'Cormorant Garamond', Georgia, serif;
+            --font-n: 'Inter', system-ui, sans-serif;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--cream);
+            font-family: var(--font-n);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(184, 134, 90, 0.18);
+            border-radius: 16px;
+            padding: 48px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 32px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        h1 {
+            font-family: var(--font-s);
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+            color: var(--white);
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: #8C7D6A;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            color: var(--bronze);
+        }
+
+        input {
+            width: 100%;
+            background: #201C17;
+            border: 1px solid rgba(184, 134, 90, 0.15);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: var(--white);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--bronze);
+            box-shadow: 0 0 0 3px rgba(184, 134, 90, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background: var(--bronze);
+            color: var(--bg);
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: var(--bronze-lt);
+            transform: translateY(-2px);
+        }
+
+        #error-msg {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 16px;
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">
+            <img src="https://zinrqzsxvpqfoogohrwg.supabase.co/storage/v1/object/public/CSK/01_Simbolo_Cor_Claro_1%20copiar.png" alt="CSK">
+        </div>
+        <h1>Acesso Administrativo</h1>
+        <p>Entre com suas credenciais para gerenciar leads.</p>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="email" required placeholder="admin@csk.com.br">
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" id="submit-btn">Entrar</button>
+            <div id="error-msg">E-mail ou senha inválidos.</div>
+        </form>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://zinrqzsxvpqfoogohrwg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppbnJxenN4dnBxZm9vZ29ocndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMDk1MDIsImV4cCI6MjA3NTg4NTUwMn0.0VDP-0ys8Y_VUhLXNCJCcSV1xAXV4c6pBvUq4mjPsRU';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-msg');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Autenticando...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                errorMsg.innerText = "Erro: " + error.message;
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Entrar';
+            } else {
+                // Sessão criada com sucesso
+                window.location.href = '/dashboard';
+            }
+        });
+
+        // Verificar se já está logado
+        supabase.auth.getSession().then(({ data }) => {
+            if (data.session) {
+                window.location.href = '/dashboard';
+            }
+        });
+    </script>
+</body>
+</html>
