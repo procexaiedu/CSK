@@ -44,22 +44,23 @@ export default async function handler(req, res) {
   if (leadsError) return res.status(500).send(leadsError.message);
 
   // Gerar CSV
-  const headers = ['Nome', 'WhatsApp', 'Instagram', 'Profissao', 'Faturamento', 'Data'];
+  const headers = ['Nome', 'WhatsApp', 'Instagram', 'Profissao', 'Faturamento', 'Pergunta Cafe', 'Data'];
   const rows = leads.map(l => [
     l.nome,
     l.telefone,
     l.instagram,
     l.profissao,
     l.faturamento_empresa,
+    l.pergunta_cafe,
     new Date(l.criado_em).toLocaleDateString('pt-BR')
   ]);
 
-  const csvContent = [
+  const csvContent = "\ufeff" + [
     headers.join(','),
     ...rows.map(r => r.map(field => `"${field ?? ''}"`).join(','))
   ].join('\n');
 
-  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename=leads_csk.csv');
   return res.status(200).send(csvContent);
 }
