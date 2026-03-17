@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caroline Sautchuk · Arquitetando o Extraordinário</title>
+  <meta name="description"
+    content="Garanta seu lugar na palestra Arquitetando o Extraordinário e acesse o grupo VIP exclusivo da Caroline Sautchuk." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #111009;
+      --bg-card: #1A1712;
+      --bg-subtle: #201C17;
+      --border: rgba(184, 134, 90, 0.18);
+      --bronze: #B8865A;
+      --bronze-lt: #D4A87C;
+      --bronze-glow: rgba(184, 134, 90, 0.10);
+      --cream: #F0EAE0;
+      --white: #FFFFFF;
+      --muted: #8C7D6A;
+      --font-s: 'Cormorant Garamond', Georgia, serif;
+      --font-n: 'Inter', system-ui, sans-serif;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-n);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bronze);
+      border-radius: 3px;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 40px;
+      background: linear-gradient(to bottom, rgba(17, 16, 9, 0.95) 0%, transparent 100%);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--bronze);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+    }
+
+    .logo-name {
+      font-family: var(--font-s);
+      font-size: 0.82rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');
+      /* Luxury interior placeholder */
+      background-size: cover;
+      background-position: center;
+      opacity: 0.3;
+      filter: saturate(0.5);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(17, 16, 9, 0.2) 0%, rgba(17, 16, 9, 0.85) 65%, var(--bg) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 28px;
+      animation: up 0.9s 0.2s var(--ease) forwards;
+      opacity: 0;
+    }
+
+    .hero-tag span {
+      width: 30px;
+      height: 1px;
+      background: var(--bronze);
+      opacity: 0.6;
+    }
+
+    .hero-title {
+      font-family: var(--font-s);
+      font-weight: 300;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      animation: up 1s 0.4s var(--ease) forwards;
+      opacity: 0;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--bronze-lt);
+    }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--cream);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+      animation: up 1s 0.65s var(--ease) forwards;
+      opacity: 0;
+    }
+
+    .hero-scroll {
+      margin-top: 52px;
+      animation: up 1s 0.9s var(--ease) forwards;
+      opacity: 0;
+    }
+
+    .scroll-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--bronze);
+      padding: 16px 36px;
+      border-radius: 100px;
+      border: none;
+      text-decoration: none;
+      transition: 0.3s var(--ease);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .scroll-btn:hover {
+      background: var(--bronze-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--bronze-glow);
+    }
+
+    /* ─── MAIN CONTENT LAYOUT ─── */
+    .content-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px 120px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    @media(max-width:900px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    /* ─── LEFT: ABOUT TALK ─── */
+    .talk-info {
+      position: sticky;
+      top: 120px;
+    }
+
+    .section-eye {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .talk-title {
+      font-family: var(--font-s);
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .talk-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--cream);
+    }
+
+    .feature-icon {
+      color: var(--bronze);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .caroline-preview {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .cp-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--bronze);
+    }
+
+    .cp-text h4 {
+      font-family: var(--font-s);
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--white);
+    }
+
+    .cp-text p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    /* ─── RIGHT: FORM ─── */
+    .form-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media(max-width:600px) {
+      .form-container {
+        padding: 32px 24px;
+      }
+    }
+
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--bronze), var(--bronze-lt), var(--bronze));
+    }
+
+    .form-heading {
+      margin-bottom: 32px;
+    }
+
+    .form-title {
+      font-family: var(--font-s);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-group label span {
+      color: var(--bronze);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid rgba(184, 134, 90, 0.15);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--white);
+      font-family: var(--font-n);
+      font-size: 0.9rem;
+      transition: 0.3s var(--ease);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(184, 134, 90, 0.8);
+      background: rgba(184, 134, 90, 0.05);
+      box-shadow: 0 0 0 3px rgba(184, 134, 90, 0.1);
+    }
+
+    .form-group select option {
+      background: var(--bg-card);
+      color: var(--cream);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-submit {
+      width: 100%;
+      background: var(--bronze);
+      color: var(--bg);
+      font-family: var(--font-n);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: none;
+      padding: 18px 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: 0.3s var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .form-submit:hover {
+      background: var(--bronze-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--bronze-glow);
+    }
+
+    .form-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    .form-note a {
+      color: var(--bronze);
+      text-decoration: none;
+    }
+
+    .form-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── LOADING & SUCCESS STATES ─── */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(17, 16, 9, 0.2);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #success-state {
+      display: none;
+      text-align: center;
+      padding: 40px 10px;
+    }
+
+    .success-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--bronze);
+    }
+
+    .success-title {
+      font-family: var(--font-s);
+      font-size: 2.2rem;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .success-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      font-family: var(--font-s);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .footer-hint {
+      font-size: 0.7rem;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="#" class="logo">
+      <img
+        src="https://zinrqzsxvpqfoogohrwg.supabase.co/storage/v1/object/public/CSK/01_Simbolo_Cor_Claro_1%20copiar.png"
+        alt="CSK" style="height: 36px; width: auto; object-fit: contain;">
+      <span class="logo-name">Caroline Sautchuk</span>
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span></span>
+        Masterclass Exclusiva
+        <span></span>
+      </div>
+      <h1 class="hero-title">
+        Arquitetando o<br><em>Extraordinário</em>
+      </h1>
+      <p class="hero-sub">
+        Descubra os pilares do padrão Sautchuk para criar e posicionar projetos no mercado de altíssimo luxo.
+      </p>
+      <div class="hero-scroll">
+        <button class="scroll-btn" onclick="document.getElementById('cadastro').scrollIntoView({behavior:'smooth'})">
+          Receba seu presente aqui &nbsp;↓
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section id="cadastro" class="content-wrapper">
+
+    <!-- LEFT: INFO -->
+    <div class="talk-info">
+      <span class="section-eye">Próximo Passo</span>
+      <h2 class="talk-title">Sua jornada para o mercado milionário começa aqui.</h2>
+      <p class="talk-desc">
+        Ao preencher o formulário, você garantirá o acesso ao material da palestra <strong>Arquitetando o
+          Extraordinário</strong> e será imediatamente direcionado(a) ao grupo VIP exclusivo da Caroline Sautchuk.
+      </p>
+
+
+
+      <div class="caroline-preview">
+        <img src="https://zinrqzsxvpqfoogohrwg.supabase.co/storage/v1/object/public/CSK/IMG_2996.PNG"
+          alt="Caroline Sautchuk" class="cp-img">
+        <div class="cp-text">
+          <h4>Caroline Sautchuk</h4>
+          <p>Arquiteta • Mentora AAA</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: FORM -->
+    <div class="form-container" id="form-wrap">
+
+      <div id="form-content">
+        <div class="form-heading">
+          <h3 class="form-title">Application CSK</h3>
+          <p class="form-subtitle">Preencha seus dados para receber o PDF e acessar o grupo VIP.</p>
+        </div>
+
+        <form id="lead-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome Completo <span>*</span></label>
+              <input type="text" id="nome" placeholder="Seu nome" required />
+            </div>
+            <div class="form-group">
+              <label>Telefone (WhatsApp) <span>*</span></label>
+              <input type="tel" id="telefone" placeholder="(00) 00000-0000" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>@ do Instagram <span>*</span></label>
+            <input type="text" id="instagram" placeholder="@seuperfil" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Profissão <span>*</span></label>
+              <select id="profissao" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="Arquiteto">Arquiteto</option>
+                <option value="Corretor">Corretor</option>
+                <option value="Empresário">Empresário</option>
+                <option value="Estudante">Estudante</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Faturamento Empresa/Autonomia <span>*</span></label>
+              <select id="faturamento" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="Até 10k">Até R$ 10.000</option>
+                <option value="10k - 50k">R$ 10k - R$ 50.000</option>
+                <option value="50k - 100k">R$ 50k - R$ 100.000</option>
+                <option value="100k - 500k">R$ 100k - R$ 500.000</option>
+                <option value="1M+">R$ 1M+</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>O que você perguntaria em um café para a Carol? <span>*</span></label>
+            <textarea id="pergunta" placeholder="Escreva sua maior dúvida ou obstáculo atual..." required></textarea>
+          </div>
+
+          <button type="button" id="submit-btn" class="form-submit">
+            <span>Acessar conteúdo exclusivo</span>
+            <div class="spinner" id="btn-spinner" style="display:none;"></div>
+          </button>
+
+          <p class="form-note">Ao se cadastrar, você concorda em receber comunicações da equipe CSK.</p>
+          <div id="error-msg"
+            style="color:#e74c3c; font-size:0.8rem; text-align:center; margin-top:10px; display:none;">
+            Ocorreu um erro ao salvar o formulário. Tente novamente.
+          </div>
+        </form>
+      </div>
+
+      <div id="success-state">
+        <div class="success-icon">✦</div>
+        <h3 class="success-title">Tudo certo!</h3>
+        <p class="success-desc">Seu cadastro foi recebido com sucesso. Você está a um passo do extraordinário.</p>
+        <button class="scroll-btn" onclick="redirectToWpp()" style="width:100%; justify-content:center;">
+          Entrar no Grupo VIP
+        </button>
+        <p class="form-note" style="margin-top:24px;">Redirecionando automaticamente em instantes...</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-brand">Caroline Sautchuk · Palestra</span>
+    <span class="footer-hint">© 2026 · Todos os direitos reservados</span>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("=== DOM LOADED ===");
+      // ==========================================
+      // CONFIGURAÇÃO DO SUPABASE
+      // ==========================================
+      const SUPABASE_URL = 'https://zinrqzsxvpqfoogohrwg.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppbnJxenN4dnBxZm9vZ29ocndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMDk1MDIsImV4cCI6MjA3NTg4NTUwMn0.0VDP-0ys8Y_VUhLXNCJCcSV1xAXV4c6pBvUq4mjPsRU';
+      const TABLE_NAME = 'formularios'; // Tabela 'formularios'
+      const SCHEMA_NAME = 'CSK'; // Schema 'CSK'
+
+      const GROUP_LINK = 'https://chat.whatsapp.com/CZ60jhbV9XFEXmTZnHx72T?mode=gi_t';
+
+      let supabase;
+      try {
+        console.log("Inicializando Supabase Client...");
+        if (typeof window.supabase === 'undefined') {
+          console.error("ERRO CRITICO: window.supabase não existe! O script do Supabase não foi carregado corretamente.");
+        } else {
+          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            db: {
+              schema: SCHEMA_NAME
+            }
+          });
+          console.log("Supabase Client inicializado para o schema:", SCHEMA_NAME);
+        }
+      } catch (err) {
+        console.error("Erro ao inicializar Supabase: ", err);
+      }
+
+      console.log("Buscando elementos do DOM...");
+      const form = document.getElementById('lead-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const btnText = submitBtn.querySelector('span');
+      const errorMsg = document.getElementById('error-msg');
+      const formContent = document.getElementById('form-content');
+      const successState = document.getElementById('success-state');
+
+      console.log("Adicionando Event Listener no Form...", { formEncontrado: !!form });
+
+      if (!form) {
+        console.error("ERRO CRÍTICO: Formulário 'lead-form' não encontrado!");
+        return;
+      }
+
+      // Retira a obrigatoriedade nativa do HTML para lidarmos via JS
+      submitBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); // Impede o recarregamento
+        console.log("=== BOTAO CLICADO ===");
+        errorMsg.style.display = 'none';
+
+        // Validação manual simples
+        const nome = document.getElementById('nome').value;
+        const telefone = document.getElementById('telefone').value;
+        const instagram = document.getElementById('instagram').value;
+        const profissao = document.getElementById('profissao').value;
+        const faturamento = document.getElementById('faturamento').value;
+        const pergunta = document.getElementById('pergunta').value;
+
+        if (!nome || !telefone || !instagram || !profissao || !faturamento || !pergunta) {
+          alert("Por favor, preencha todos os campos obrigatórios.");
+          return;
+        }
+
+        try {
+          console.log("Tentando atualizar UI state...");
+          // UI Loading state
+          submitBtn.disabled = true;
+          if (btnText) btnText.style.display = 'none';
+          if (btnSpinner) btnSpinner.style.display = 'block';
+
+          console.log("Coletando dados do form...");
+          const data = {
+            nome: nome,
+            telefone: telefone,
+            instagram: instagram,
+            profissao: profissao,
+            faturamento_empresa: faturamento,
+            pergunta_cafe: pergunta
+          };
+          console.log("Dados do lead: ", data);
+
+          console.log("Iniciando requisição ao Supabase...");
+          if (supabase) {
+            // Envia para o Supabase no schema correto, configurado no createClient
+            const { error } = await supabase
+              .from(TABLE_NAME)
+              .insert([data]);
+
+            if (error) {
+              console.error("Erro retornado pelo Supabase: ", error);
+              throw error;
+            }
+            console.log("Inserção no Supabase bem-sucedida!");
+          } else {
+            console.warn("Supabase client não está inicializado.");
+            // Simulação caso não haja credenciais (modo de teste)
+            console.log('Modo Teste (Sem Credenciais): Dados que seriam salvos:', data);
+            await new Promise(r => setTimeout(r, 1200));
+          }
+
+          // Sucesso
+          formContent.style.display = 'none';
+          successState.style.display = 'block';
+
+          // Redireciona pro WPP depois de 3 segundos
+          setTimeout(() => {
+            redirectToWpp();
+          }, 3000);
+
+        } catch (err) {
+          console.error('Erro ao salvar lead:', err);
+          errorMsg.style.display = 'block';
+          submitBtn.disabled = false;
+          btnText.style.display = 'block';
+          btnSpinner.style.display = 'none';
+        }
+      });
+
+      window.redirectToWpp = function () {
+        window.location.href = GROUP_LINK;
+      };
+    }); // Fechamento do DOMContentLoaded
+  </script>
+
+</body>
+
+</html>
